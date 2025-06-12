@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang=en>
+<head>
+<meta charset=UTF-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Metronome Pro</title>
+<style>*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif}body{display:flex;justify-content:center;align-items:center;min-height:100vh;background:#333;padding:20px;color:#fff}.metronome-container{width:100%;max-width:500px;background:rgba(0,0,0,.7);border-radius:20px;border:2px dashed grey;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,.5);backdrop-filter:blur(10px);text-align:center}h1{font-size:2.2rem;margin-bottom:10px;color:gold;text-shadow:0 0 10px rgba(255,215,0,.5)}.subtitle{color:#aaa;margin-bottom:30px}.control-panel{background:rgba(40,40,40,.8);border-radius:15px;padding:20px;margin-bottom:10px}.control-group{margin-bottom:20px}.control-label{display:block;margin-bottom:8px;font-weight:600;color:gold}.bpm-controls{display:flex;align-items:center;justify-content:space-between;gap:15px}.number-input{width:80px;height:50px;text-align:center;font-size:1.8rem;font-weight:700;background:#222;color:#fff;border:2px solid #444;border-radius:10px;outline:0}.range-input{width:100%;height:8px;margin-top:15px;-webkit-appearance:none;background:#333;border-radius:4px;outline:0}.range-input::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;background:gold;border-radius:50%;cursor:pointer;box-shadow:0 0 10px rgba(255,215,0,.8)}.btn-control{width:50px;height:50px;font-size:1.8rem;background:#333;color:#fff;border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}.btn-control:hover{background:#444;transform:scale(1.05)}.btn-control:active{transform:scale(.95)}.visualization{position:relative;height:180px;margin:20px 0;display:flex;flex-direction:column;justify-content:center;align-items:center}.beat-indicators{display:flex;flex-wrap:wrap;justify-content:center;max-width:350px;gap:1px;margin-bottom:5px}.indicator-row{display:flex;justify-content:center;gap:8px;margin-bottom:8px}.beat-light{width:30px;height:30px;border-radius:50%;background:#333;transition:all .1s;box-shadow:inset 0 0 5px rgba(0,0,0,.8);transition:all .1s ease}.beat-light.active{background:gold;box-shadow:0 0 15px rgba(255,215,0,.8);transform:scale(1.1)}.beat-light.first-beat{background:#333}.beat-light.first-beat.active{background:green;box-shadow:0 0 15px rgba(0,255,94,.4);transform:scale(1.1)}.current-beat-display{font-size:2.5rem;font-weight:700;margin:5px 0;min-height:60px;display:flex;align-items:center;justify-content:center}.bar-display{font-size:1.2rem;color:#aaa}.bar-count{font-weight:700;color:gold;font-size:1.4rem}.play-control{margin-top:10px}.play-btn{width:80px;height:80px;border-radius:50%;background:gold;color:#222;border:none;font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:0 auto;transition:all .2s;box-shadow:0 0 20px rgba(255,215,0,.5);cursor:none}.play-btn:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(255,215,0,.8)}.play-btn:active{transform:scale(.95)}.stop-btn{background:#ff4500;box-shadow:0 0 20px rgba(255,69,0,.5)}.stop-btn:hover{box-shadow:0 0 30px rgba(255,69,0,.8)}@media (max-width:480px){.metronome-container{padding:20px;max-width:100%}h1{font-size:1.8rem}.control-panel{padding:15px}.number-input{width:70px;height:45px;font-size:1.5rem}.btn-control{width:45px;height:45px;font-size:1.5rem}.beat-light{width:35px;height:35px}.current-beat-display{font-size:2.2rem}.play-btn{width:70px;height:70px}}</style>
+</head>
+<body>
+<div class=metronome-container>
+<h1>METRONOME PRO</h1>
+<p class=subtitle>tempo control with beat visualization</p>
+<div class=control-panel>
+<div class=control-group>
+<span class=control-label>BPM (30-244)</span>
+<div class=bpm-controls>
+<button id=bpm-minus class=btn-control>-</button>
+<input type=number id=bpm-input class=number-input min=30 max=244 value=120>
+<button id=bpm-plus class=btn-control>+</button>
+</div>
+<input type=range id=bpm-range class=range-input min=30 max=244 value=120>
+</div>
+<div class=control-group>
+<span class=control-label>BPB (1-12)</span>
+<div class=bpm-controls>
+<button id=beats-minus class=btn-control>-</button>
+<input type=number id=beats-input class=number-input min=1 max=12 value=4>
+<button id=beats-plus class=btn-control>+</button>
+</div>
+</div>
+</div>
+<div class=visualization>
+<div id=beat-indicators class=beat-indicators>
+</div>
+<div id=current-beat class=current-beat-display>-</div>
+<div class=bar-display>Bar: <span id=bar-count class=bar-count>0</span></div>
+</div>
+<div class=play-control>
+<button id=play-stop class=play-btn>Play</button>
+</div>
+</div>
+<script>document.addEventListener("DOMContentLoaded",(function(){const e=document.getElementById("bpm-input"),t=document.getElementById("bpm-range"),n=document.getElementById("bpm-minus"),a=document.getElementById("bpm-plus"),i=document.getElementById("beats-input"),c=document.getElementById("beats-minus"),o=document.getElementById("beats-plus"),d=document.getElementById("beat-indicators"),l=document.getElementById("current-beat"),s=document.getElementById("bar-count"),u=document.getElementById("play-stop");let m,r=120,v=4,p=0,E=0,b=!1,g=0,f=null;function y(){d.innerHTML="";const e=Math.ceil(v/6),t=Math.ceil(v/e);let n=0;for(let a=0;a<e;a++){const e=document.createElement("div");e.className="indicator-row";for(let a=0;a<t&&(n++,!(n>v));a++){const t=document.createElement("div");t.className="beat-light",1===n&&t.classList.add("first-beat"),t.dataset.beat=n,e.appendChild(t)}d.appendChild(e)}}function L(e,t){document.querySelectorAll(".beat-light").forEach((e=>{e.classList.remove("active")}));const n=document.querySelector(`.beat-light[data-beat="${e}"]`);n&&n.classList.add("active"),l.textContent=e>0?e:"-",s.textContent=t}function I(e,t){if(!m)return;const n=m.createOscillator(),a=m.createGain();n.connect(a),a.connect(m.destination),n.type="sine",n.frequency.value=e,a.gain.value=.7,n.start(t),a.gain.setValueAtTime(.7,t),a.gain.exponentialRampToValueAtTime(.001,t+.1),n.stop(t+.1)}function h(){const e=60/r;for(;g<m.currentTime+.1;)p=p%v+1,1===p&&E++,I(1===p?880:440,g),setTimeout((()=>{L(p,E)}),1e3*(g-m.currentTime)),g+=e}function k(){b||(m||(m=new(window.AudioContext||window.webkitAudioContext)),b=!0,u.textContent="Stop",u.classList.add("stop-btn"),p=0,E=0,g=m.currentTime,L(0,0),f=setInterval(h,25))}function B(){b&&(b=!1,u.textContent="Play",u.classList.remove("stop-btn"),L(0,0),clearInterval(f))}function T(n){(n=parseInt(n))>=30&&n<=244&&(r=n,e.value=r,t.value=r,b&&(B(),k()))}function C(e){(e=parseInt(e))>=1&&e<=12?(v=e,i.value=v,y(),b?(B(),k()):L(0,0)):i.value=v}e.addEventListener("change",(()=>T(e.value))),t.addEventListener("input",(()=>T(t.value))),n.addEventListener("click",(()=>T(r-1))),a.addEventListener("click",(()=>T(r+1))),i.addEventListener("change",(()=>C(i.value))),c.addEventListener("click",(()=>C(v-1))),o.addEventListener("click",(()=>C(v+1))),u.addEventListener("click",(()=>{b?B():k()})),document.addEventListener("visibilitychange",(()=>{document.hidden?(console.log("Tab tidak aktif. Metronome dihentikan."),B()):(k(),console.log("Tab kembali aktif."))})),y(),L(0,0)}))</script>
+</body>
+</html>
